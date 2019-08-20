@@ -87,7 +87,7 @@ function getLength( id ) {
 			( id.childNodes[ i ].id == 'coordinates' || id.childNodes[ i ].className.indexOf( 'emplate' ) != -1 ) ) {
 			// special case for {{coord}} and {{fact}}-like templates
 			// Exclude from length, and don't set background yellow
-			id.childNodes[ i ].style.cssText = 'background-color:white';
+			id.childNodes[ i ].addClass( 'prosesize-special-template' );
 		} else {
 			textLength += getLength( id.childNodes[ i ] );
 		}
@@ -98,11 +98,19 @@ function getLength( id ) {
 function getRefMarkLength( id, html ) {
 	var textLength = 0;
 	for ( var i = 0; i < id.childNodes.length; i++ ) {
-		if ( id.childNodes[ i ].nodeType === Node.ELEMENT_NODE && id.childNodes[ i ].className == 'reference' ) {
+		if ( id.childNodes[ i ].nodeType === Node.ELEMENT_NODE && id.childNodes[ i ].className === 'reference' ) {
 			textLength += ( html ) ? id.childNodes[ i ].innerHTML.length : getLength( id.childNodes[ i ] );
 		}
 	}
 	return textLength;
+}
+
+function sizeFormatter( size ) {
+	if ( size > 10240 ) {
+		return ( ( size / 1024 ).toFixed( 0 ) + '&nbsp;kB' );
+	} else {
+		return ( size + '&nbsp;B' );
+	}
 }
 
 function getDocumentSize() {
@@ -130,7 +138,7 @@ function getDocumentSize() {
 
 		var header = $( 'span' )
 			.prop( 'id', 'document-size-header' )
-			.html( '<br/>Document statistics: <small><i>(See <a href="//en.wikipedia.org/wiki/User_talk:Dr_pda/prosesize.js">here</a> for details.)<i></small>' );
+			.html( '<br/>Document statistics: <small><i>(See <a href="//en.wikipedia.org/wiki/Wikipedia:Prosesize">here</a> for details.)<i></small>' );
 
 		bodyContent.prepend( header, output );
 
@@ -154,21 +162,12 @@ function getDocumentSize() {
 				refmark_size += getRefMarkLength( para, false );
 				refmark_size_html += getRefMarkLength( para, true );
 				word_count += para.innerHTML.replace( /(<([^>]+)>)/ig, '' ).split( ' ' ).length;
-				para.style.cssText = 'background-color:yellow';
+				para.classes += ' prosesize-highlight';
 			}
 		}
 
-		if ( ( prose_size - refmark_size ) > 10240 ) {
-			prose_value.innerHTML = '<b>Prose size (text only): </b>' + ( ( prose_size - refmark_size ) / 1024 ).toFixed( 0 ) + '&nbsp;kB (' + word_count + ' words) "readable prose size"';
-		} else {
-			prose_value.innerHTML = '<b>Prose size (text only): </b>' + ( prose_size - refmark_size ) + '&nbsp;B (' + word_count + ' words) "readable prose size"';
-		}
-
-		if ( ( prose_size_html - refmark_size_html ) > 10240 ) {
-			prose_html_value.innerHTML = '<b>Prose size (including all HTML code): </b>' + ( ( prose_size_html - refmark_size_html ) / 1024 ).toFixed( 0 ) + '&nbsp;kB';
-		} else {
-			prose_html_value.innerHTML = '<b>Prose size (including all HTML code): </b>' + ( prose_size_html - refmark_size_html ) + '&nbsp;B';
-		}
+		prose_value.innerHTML = '<b>Prose size (text only): </b>' + sizeFormatter( prose_size - refmark_size ) + ' (' + word_count + ' words) "readable prose size"';
+		prose_html_value.innerHTML = '<b>Prose size (including all HTML code): </b>' + sizeFormatter( prose_size_html - refmark_size_html );
 
 		// Calculate size of references (i.e. output of <references/>)
 		var rList = bodyContent.getElementsByTagName( 'ol' );
@@ -181,35 +180,22 @@ function getDocumentSize() {
 			}
 		}
 
-		if ( ( ref_size + refmark_size ) > 10240 ) {
-			ref_value.innerHTML = '<b>References (text only): </b>' + ( ( ref_size + refmark_size ) / 1024 ).toFixed( 0 ) + '&nbsp;kB';
-		} else {
-			ref_value.innerHTML = '<b>References (text only): </b>' + ( ref_size + refmark_size ) + '&nbsp;B';
-		}
+		ref_value.innerHTML = '<b>References (text only): </b>' + sizeFormatter( ref_size + refmark_size );
+		ref_html_value.innerHTML = '<b>References (including all HTML code): </b>' + sizeFormatter( ref_size_html + refmark_size_html );
 
-		if ( ( ref_size_html + refmark_size_html ) > 10240 ) {
-			ref_html_value.innerHTML = '<b>References (including all HTML code): </b>' + ( ( ref_size_html + refmark_size_html ) / 1024 ).toFixed( 0 ) + '&nbsp;kB';
-		} else {
-			ref_html_value.innerHTML = '<b>References (including all HTML code): </b>' + ( ref_size_html + refmark_size_html ) + '&nbsp;B';
-		}
-
-		// get correct name of article from wikipedia-defined global variables
-		var pageNameUnderscores = mw.config.get( 'wgPageName' );
-		var pageNameSpaces = pageNameUnderscores.replace( /_/g, ' ' );
 		if ( mw.config.get( 'wgAction' ) == 'submit' ) {
 			// Get size of text in edit box
-			result = document.getElementById( 'wpTextbox1' ).value.length;
+			result = $( '#wpTextbox1' ).length;
 			if ( result > 10240 ) {
 				result = ( result / 1024 ).toFixed( 0 ) + '&nbsp;kB';
 			} else {
 				result = result + '&nbsp;B';
 			}
-			wiki_value = document.createElement( 'li' );
-			wiki_value.id = 'wiki-size';
-			wiki_value.innerHTML = '<b>Wiki text: </b>' + result;
-			var output = document.getElementById( 'document-size-stats' );
-			prose_value = document.getElementById( 'prose-size' );
-			output.insertBefore( wiki_value, prose_value );
+			wiki_value = $( 'li' )
+				.prop('id', 'wiki-size')
+				.html( '<b>Wiki text: </b>' + result );
+			var output = $( 'document-size-stats' );
+			$( 'prose-size' ).before(wiki_value);
 		} else {
 			// Get revision size from API
 			Apiresult = Api.get( {
@@ -218,12 +204,12 @@ function getDocumentSize() {
 				revids: mw.config.get( 'wgRevisionId' ),
 				formatversion: 2
 			} );
-			loadXMLDocPassingTemplate( searchURL, getWikiText, pageNameSpaces );
+			loadXMLDocPassingTemplate( searchURL, getWikiText, mw.config.get( 'wgPageName' ).replace( /_/g, ' ' ) );
 		}
 	}
 }
 
-$.when( $.ready, mw.loader.using( ['mediawiki.api', 'mediawiki.util'] ) ).then( function () {
+$.when( $.ready, mw.loader.using( [ 'mediawiki.api', 'mediawiki.util' ] ) ).then( function () {
 	// Depending on whether in edit mode or preview/view mode, show the approppiate response upon clicking the portlet link
 	var func, $portlet;
 	if ( mw.config.get( 'wgAction' ) == 'edit' || ( mw.config.get( 'wgAction' ) == 'submit' && document.getElementById( 'wikiDiff' ) ) ) {

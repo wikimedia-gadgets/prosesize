@@ -5,3 +5,7 @@
 .prosesize-portlet-link-edit-mode:first-child {
 	color:black;
 }
+
+.prosesize-special-template {
+	background-color: none;
+}
