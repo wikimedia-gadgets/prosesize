@@ -1,14 +1,7 @@
 /* eslint-disable */
-// copy of [[User:Dr_pda/prosesize.js]]
+// rewrite of [[User:Dr_pda/prosesize.js]]
 // TODO: modernize (User:Shubinator/DYKcheck.js may have useful code? or use xtools api ) and fix to work on all maintained skins propose to become gadget
 // Wikipedia:Village_pump_(technical)/Archive_161#"Page_size"_Tool:_"Word_count"_script_'User:Dr_pda/prosesize.js'_does_not_work_with_skin_=_Timeless
-// <nowiki>
-// This function adds a link to the toolbox which, when clicked, displays the size of the page
-// and the size of the prose. See the talk page for more details.
-//
-// To use this function add {{subst:js|User:Dr pda/prosesize.js}} to your monobook.js
-//
-mw.util.addCSS( '.prosesize-highlight {background-color: yellow;}' );
 function loadXMLDocPassingTemplate( url, handler, page ) {
 	// branch for native XMLHttpRequest object
 	if ( window.XMLHttpRequest ) {
