@@ -223,7 +223,7 @@ function getDocumentSize() {
 	}
 }
 
-$.when( $.ready, mw.loader.using( 'mediawiki.util' ) ).then( function () {
+$.when( $.ready, mw.loader.using( ['mediawiki.api', 'mediawiki.util'] ) ).then( function () {
 	// Depending on whether in edit mode or preview/view mode, show the approppiate response upon clicking the portlet link
 	var func, $portlet;
 	if ( mw.config.get( 'wgAction' ) == 'edit' || ( mw.config.get( 'wgAction' ) == 'submit' && document.getElementById( 'wikiDiff' ) ) ) {
