@@ -1,3 +1,7 @@
 .prosesize-highlight {
 	background-color: yellow;
 }
+
+.prosesize-portlet-link-edit-mode:first-child {
+	color:black;
+}

@@ -106,8 +106,8 @@ function getRefMarkLength( id, html ) {
 }
 
 function getDocumentSize() {
-	var bodyContent = $('.mw-parser-output')
-	
+	var bodyContent = $( '.mw-parser-output' );
+
 	if ( bodyContent.length === 0 ) {
 		return;
 	}
@@ -118,17 +118,18 @@ function getDocumentSize() {
 		$( 'document-size-header' ).remove();
 		bodyContent.children( 'p' ).removeClass( 'prosesize-highlight' );
 	} else {
-		output = $( 'ul' ).prop('id', 'document-size-stats');
+		var Api = new mw.Api();
+		output = $( 'ul' ).prop( 'id', 'document-size-stats' );
 
-		var prose_html_value = $( 'li' ).prop('id', 'prose-size-html');
-		var ref_html_value = $( 'li' ).prop('id', 'ref-size-html');
-		var prose_value = $( 'li' ).prop('id', 'prose-size');
-		var ref_value = $( 'li' ).prop('id', 'ref-size');
+		var prose_html_value = $( 'li' ).prop( 'id', 'prose-size-html' );
+		var ref_html_value = $( 'li' ).prop( 'id', 'ref-size-html' );
+		var prose_value = $( 'li' ).prop( 'id', 'prose-size' );
+		var ref_value = $( 'li' ).prop( 'id', 'ref-size' );
 
-		output.append(prose_html_value, ref_html_value, prose_value, ref_value)
+		output.append( prose_html_value, ref_html_value, prose_value, ref_value );
 
 		var header = $( 'span' )
-			.prop( 'id', 'document-size-header')
+			.prop( 'id', 'document-size-header' )
 			.html( '<br/>Document statistics: <small><i>(See <a href="//en.wikipedia.org/wiki/User_talk:Dr_pda/prosesize.js">here</a> for details.)<i></small>' );
 
 		bodyContent.prepend( header, output );
@@ -211,7 +212,12 @@ function getDocumentSize() {
 			output.insertBefore( wiki_value, prose_value );
 		} else {
 			// Get revision size from API
-			var searchURL = mw.config.get( 'wgScriptPath' ) + '/api.php?action=query&prop=revisions&rvprop=size&format=xml&revids=' + mw.config.get( 'wgCurRevisionId' );
+			Apiresult = Api.get( {
+				prop: 'revisions',
+				rvprop: 'size',
+				revids: mw.config.get( 'wgRevisionId' ),
+				formatversion: 2
+			} );
 			loadXMLDocPassingTemplate( searchURL, getWikiText, pageNameSpaces );
 		}
 	}
@@ -219,19 +225,20 @@ function getDocumentSize() {
 
 $.when( $.ready, mw.loader.using( 'mediawiki.util' ) ).then( function () {
 	// Depending on whether in edit mode or preview/view mode, show the approppiate response upon clicking the portlet link
-	var func;
+	var func, $portlet;
 	if ( mw.config.get( 'wgAction' ) == 'edit' || ( mw.config.get( 'wgAction' ) == 'submit' && document.getElementById( 'wikiDiff' ) ) ) {
 		func = function () {
 			alert( 'You need to preview the text for the prose size script to work in edit mode.' );
 		};
-		mw.util.addCSS( '#t-page-size:first-child { color:black;}' );
+		$portlet.addClass( 'prosesize-portlet-link-edit-mode' );
 	} else if ( [ 'view', 'submit', 'historysubmit', 'purge' ].indexOf( mw.config.get( 'wgAction' ) ) !== -1 ) {
 		func = function () {
 			getDocumentSize();
 		};
 	}
 	if ( func ) {
-		$( mw.util.addPortletLink( 'p-tb', '#', 'Page size', 't-page-size', 'Calculate page and prose size' ) ).on( 'click', function ( e ) {
+		$portlet = $( mw.util.addPortletLink( 'p-tb', '#', 'Page size', 't-page-size', 'Calculate page and prose size' ) );
+		$portlet.on( 'click', function ( e ) {
 			e.preventDefault();
 			func();
 		} );
