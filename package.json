@@ -1,0 +1,22 @@
+{
+  "name": "prosesize",
+  "version": "0.0.1",
+  "description": "Wikipedia user script - rewrite of https://en.wikipedia.org/wiki/User:Dr_pda/prosesize.js licensed under CC-BY-SA-3.0.",
+  "main": "prosesize.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/galobtter/prosesize.git"
+  },
+  "author": "",
+  "license": "CC-BY-SA-3.0",
+  "bugs": {
+    "url": "https://github.com/galobtter/prosesize/issues"
+  },
+  "homepage": "https://github.com/galobtter/prosesize#readme",
+  "devDependencies": {
+    "eslint-config-wikimedia": "^0.14.3"
+  }
+}
