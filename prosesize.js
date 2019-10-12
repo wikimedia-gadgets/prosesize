@@ -148,6 +148,7 @@
 	if (
 		!mw.config.get( 'wgCanonicalSpecialPageName' )
 	) {
+		mw.loader.load( 'User:Galobtter/scripts/prosesize.css', 'text/css' );
 		$.when( $.ready, mw.loader.using( [ 'mediawiki.api', 'mediawiki.util', 'mediawiki.notify' ] ) ).then( function () {
 			/**
 			 * Depending on whether in edit mode or preview/view mode,
