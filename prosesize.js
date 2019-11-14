@@ -1,5 +1,4 @@
 // rewrite of [[User:Dr_pda/prosesize.js]]
-// TODO: check functionality in edit mode/preview mode/submit mode
 ( function () {
 	function sizeFormatter( size ) {
 		if ( size > 10240 ) {
@@ -25,7 +24,7 @@
 		if ( mw.config.get( 'wgAction' ) === 'submit' ) {
 			// Get size of text in edit box
 			// eslint-disable-next-line no-jquery/no-global-selector
-			appendResult( $( '#wpTextbox1' ).html().length );
+			appendResult( $( '#wpTextbox1' ).textSelection( 'getContents' ).length );
 		} else if ( mw.config.get( 'wgIsArticle' ) ) {
 			// Get revision size from API
 			Api.get( {
@@ -154,20 +153,30 @@
 			 * Depending on whether in edit mode or preview/view mode,
 			 * show the approppiate response upon clicking the portlet link
 			*/
-			var func, $portlet;
-			if ( mw.config.get( 'wgAction' ) === 'edit' || ( mw.config.get( 'wgAction' ) === 'submit' && document.getElementById( 'wikiDiff' ) ) ) {
+			var func, $portlet, notEnabled = false;
+			if (
+				mw.config.get( 'wgAction' ) === 'edit' ||
+				( mw.config.get( 'wgAction' ) === 'submit' && document.getElementById( 'wikiDiff' ) )
+			) {
+				notEnabled = true;
 				func = function () {
 					mw.notify( 'You need to preview the text for the prose size script to work in edit mode.' );
 				};
-				$portlet.addClass( 'prosesize-portlet-link-edit-mode' );
 			} else if ( [ 'view', 'submit', 'historysubmit', 'purge' ].indexOf( mw.config.get( 'wgAction' ) ) !== -1 ) {
 				func = main;
 			}
 			if ( func ) {
 				$portlet = $( mw.util.addPortletLink( 'p-tb', '#', 'Page size', 't-page-size', 'Calculate page and prose size' ) );
+				if ( notEnabled ) {
+					$portlet.addClass( 'prosesize-portlet-link-edit-mode' );
+				}
 				$portlet.on( 'click', function ( e ) {
 					e.preventDefault();
-					func();
+					if ( window.ve && ve.init && ve.init.target && ve.init.target.active ) {
+						mw.notify( 'Prosesize does not work with the Visual Editor.' );
+					} else {
+						func();
+					}
 				} );
 			}
 		} );

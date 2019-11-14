@@ -5,7 +5,8 @@
 	],
 	"globals": {
 		"mw": false,
-		"OO": false
+		"OO": false,
+		"ve": false
 	},
 	"rules": {
 		"one-var": "off"
