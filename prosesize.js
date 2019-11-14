@@ -88,7 +88,7 @@
 	function main() {
 		var proseValue, refValue, refHtmlValue, proseHtmlValue;
 		// eslint-disable-next-line no-jquery/no-global-selector
-		var bodyContent = $( '.mw-parser-output' );
+		var parserOutput = $( '.mw-parser-output' );
 		// eslint-disable-next-line no-jquery/no-global-selector
 		var prevStats = $( '#document-size-stats' );
 		// eslint-disable-next-line no-jquery/no-global-selector
@@ -108,17 +108,17 @@
 		var combined = $( '<div>' )
 			.prop( 'id', 'document-size' )
 			.append( header, output );
-		if ( bodyContent.length === 0 ) {
+		if ( parserOutput.length === 0 ) {
 			return;
 		}
 		if ( prevStats.length ) {
 			// If statistics already exist, turn them off and remove highlighting
 			prevStats.remove();
 			prevHeader.remove();
-			bodyContent.children( 'p' ).removeClass( 'prosesize-highlight' );
+			parserOutput.children( 'p' ).removeClass( 'prosesize-highlight' );
 		} else {
 			// Calculate prose size and size of reference markers ([1] etc)
-			bodyContent.children( 'p' ).each( function () {
+			parserOutput.children( 'p' ).each( function () {
 				$( this ).addClass( 'prosesize-highlight' );
 				proseSize += getLength( this );
 				proseSizeHtml += this.innerHTML.length;
@@ -128,7 +128,7 @@
 			} );
 
 			// Calculate size of references (i.e. output of <references/>)
-			bodyContent.find( 'ol.references' ).each( function () {
+			parserOutput.find( 'ol.references' ).each( function () {
 				refSize = getLength( this );
 				refSizeHtml = this.innerHTML.length;
 			} );
@@ -138,7 +138,7 @@
 			refHtmlValue = sizeElement( 'ref-size-html', 'References (including all HTML code):', refSizeHtml + refmarkSizeHtml );
 			proseHtmlValue = sizeElement( 'prose-size-html', 'Prose size (including all HTML code):', proseSizeHtml - refmarkSizeHtml );
 			output.append( proseHtmlValue, refHtmlValue, proseValue, refValue );
-			bodyContent.prepend( combined );
+			parserOutput.prepend( combined );
 			getFileSize( proseHtmlValue );
 			getRevisionSize( proseValue );
 		}
