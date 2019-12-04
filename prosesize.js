@@ -102,7 +102,7 @@
 		var refSizeHtml = 0;
 		var header = $( '<span>' )
 			.prop( 'id', 'document-size-header' )
-			.html( 'Document statistics: <small><i>(See <a href="//en.wikipedia.org/wiki/Wikipedia:Prosesize">here</a> for details.)</i></small>' );
+			.html( 'Document statistics <small>(<a href="//en.wikipedia.org/wiki/Wikipedia:Prosesize">more information</a>)</small>:' );
 		var output = $( '<ul>' )
 			.prop( 'id', 'document-size-stats' );
 		var combined = $( '<div>' )
