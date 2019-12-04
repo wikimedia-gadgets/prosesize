@@ -2,7 +2,7 @@
 ( function () {
 	function sizeFormatter( size ) {
 		if ( size > 10240 ) {
-			return ( ( size / 1024 ).toFixed( 0 ) + '&nbsp;kB' );
+			return ( Math.round( size / 1024 ) + '&nbsp;kB' );
 		} else {
 			return ( size + '&nbsp;B' );
 		}
