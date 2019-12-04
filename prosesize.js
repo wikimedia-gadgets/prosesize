@@ -40,10 +40,10 @@
 	}
 
 	function getFileSize( proseHtmlValue ) {
-		// File size not well defined for preview mode or section edit
+		// HTML document size not well defined for preview mode or section edit
 		if ( mw.config.get( 'wgAction' ) !== 'submit' ) {
 			$.get( location ).then( function ( result ) {
-				var fsize = sizeElement( 'total-size', 'File size:', result.length );
+				var fsize = sizeElement( 'total-size', 'HTML document size:', result.length );
 				proseHtmlValue.before( fsize );
 			} );
 		}
