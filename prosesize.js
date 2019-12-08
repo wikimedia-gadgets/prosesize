@@ -1,4 +1,17 @@
-// rewrite of [[User:Dr_pda/prosesize.js]]
+/*  _____________________________________________________________________________
+ * |                                                                             |
+ * |                    === WARNING: GLOBAL GADGET FILE ===                      |
+ * |                  Changes to this page affect many users.                    |
+ * | Please discuss changes on the talk page or on [[WT:Gadget]] before editing. |
+ * |_____________________________________________________________________________|
+ *
+ */
+/**
+ * Prosesize
+ * Documentation at [[Wikipedia:Prosesize]]
+ * Rewrite of [[User:Dr_pda/prosesize.js]].
+*/
+'use strict';
 ( function () {
 	function sizeFormatter( size ) {
 		if ( size > 10240 ) {
@@ -147,8 +160,7 @@
 	if (
 		!mw.config.get( 'wgCanonicalSpecialPageName' )
 	) {
-		mw.loader.load( '/w/index.php?title=User:Galobtter/scripts/prosesize.css&action=raw&ctype=text/css', 'text/css' );
-		$.when( $.ready, mw.loader.using( [ 'mediawiki.api', 'mediawiki.util', 'mediawiki.notify' ] ) ).then( function () {
+		$.ready.then( function () {
 			/**
 			 * Depending on whether in edit mode or preview/view mode,
 			 * show the approppiate response upon clicking the portlet link
