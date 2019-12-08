@@ -8,7 +8,7 @@
  */
 /**
  * Prosesize
- * Documentation at [[Wikipedia:Prosesize]]
+ * Documentation at en.wikipedia.org/wiki/Wikipedia:Prosesize
  * Rewrite of [[User:Dr_pda/prosesize.js]].
 */
 'use strict';
