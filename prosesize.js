@@ -137,7 +137,7 @@
 				proseSizeHtml += this.innerHTML.length;
 				refmarksize += getRefMarkLength( this, false );
 				refmarkSizeHtml += getRefMarkLength( this, true );
-				wordCount += this.innerHTML.replace( /(<([^>]+)>)/ig, '' ).split( ' ' ).length;
+				wordCount += this.innerHTML.replace( /(<([^>]+)>)/ig, '' ).split( /\s+/ ).length;
 			} );
 
 			// Calculate size of references (i.e. output of <references/>)
